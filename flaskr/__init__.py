@@ -29,7 +29,7 @@ def create_app(test_config=None):
         return 'Hola a todo el mundo'
 
     @app.route('/api')
-    def api():
+    def apikey():
         return os.getenv('API_TINDER', 'none')
 
     return app

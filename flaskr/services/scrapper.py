@@ -6,7 +6,7 @@ from datetime import timedelta
 from timeloop import Timeloop
 
 mongo_conn = 'mongodb+srv://{username}:{mongopass}@tinder-insights.1thdi.mongodb.net/{dbname}?retryWrites=true&w' \
-             '=majority'.format(username='tinderapp', mongopass=os.environ['MONGO_PASS'], dbname='tinderinsights')
+             '=majority'.format(username='tinderapp', mongopass=os.environ['MONGO_PASS_TINDER'], dbname='tinderinsights')
 client = pymongo.MongoClient(mongo_conn)
 
 api = os.getenv('API_TINDER')
