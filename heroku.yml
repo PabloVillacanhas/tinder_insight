@@ -1,6 +1,9 @@
 build:
   docker:
     web: Dockerfile
-  env:
-    FLASK_ENV: production
+  config:
+    FLASK_ENV: development
     FLASK_DEBUG: true
+
+run:
+  web: gunicorn -w 4 app

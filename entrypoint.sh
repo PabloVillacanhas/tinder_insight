@@ -1,3 +1,3 @@
 #!/bin/sh
 
-pipenv run python3 -m flask run
+gunicorn -w 4 app

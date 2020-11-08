@@ -10,9 +10,8 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-# install requirements
 RUN pip3 install pipenv
-RUN pipenv install --deploy --ignore-pipfile
+RUN pipenv install --system --deploy
 
-# run server
-CMD ["./entrypoint.sh"]
+RUN chmod +x ./entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
