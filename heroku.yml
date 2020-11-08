@@ -1,3 +1,6 @@
 build:
   docker:
     web: Dockerfile
+  env:
+    FLASK_ENV: production
+    FLASK_DEBUG: true
