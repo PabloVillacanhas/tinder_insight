@@ -1,7 +1,6 @@
 import os
 
 from flask import Flask
-from flaskr.services.scrapper import *
 
 
 def create_app(test_config=None):
@@ -30,7 +29,7 @@ def create_app(test_config=None):
         return 'Hola a todo el mundo'
 
     @app.route('/api')
-    def hello_world():
-        return os.environ['API_TINDER']
+    def api():
+        return os.getenv('API_TINDER', 'none')
 
     return app

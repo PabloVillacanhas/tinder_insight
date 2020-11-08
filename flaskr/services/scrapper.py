@@ -1,22 +1,40 @@
 import os
-import time
+
+import pymongo as pymongo
 import requests
-
 from datetime import timedelta
-
 from timeloop import Timeloop
+
+mongo_conn = 'mongodb+srv://{username}:{mongopass}@tinder-insights.1thdi.mongodb.net/{dbname}?retryWrites=true&w' \
+             '=majority'.format(username='tinderapp', mongopass=os.environ['MONGO_PASS'], dbname='tinderinsights')
+client = pymongo.MongoClient(mongo_conn)
+
+api = os.getenv('API_TINDER')
 
 tl = Timeloop()
 
-api = os.environ['API_TINDER']
 
-@tl.job(interval=timedelta(minutes=1))
-def sample_job_every_2s():
-    response = requests.get("https://api.gotinder.com/profile",
-                            headers={'x-auth-token': '1f7a383e-cb45-4ff0-93e4-469f84ec337f'})
-    print(response.json())
+class TinderScrapperService:
+
+    def __init__(self):
+        print('Starting daemon')
+        pass
+
+    @staticmethod
+    @tl.job(interval=timedelta(seconds=5))
+    def scrap_profile():
+        response = requests.get("https://api.gotinder.com/profile",
+                                headers={'x-auth-token': api})
+        db = client.tinderinsights
+        try:
+            result = db.profile.insert(response.json())
+        except pymongo.errors.DuplicateKeyError:
+            print('No variations')
+
+    def start_daemon(self):
+        tl.start(block=True)
 
 
 if __name__ == "__main__":
-    sample_job_every_2s()
-    tl.start(block=True)
+    tss = TinderScrapperService()
+    tss.start_daemon()
