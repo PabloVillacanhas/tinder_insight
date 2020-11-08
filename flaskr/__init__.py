@@ -27,6 +27,10 @@ def create_app(test_config=None):
 
     @app.route('/')
     def hello_world():
-        return "Hola desde la raiz"
+        return 'Hola a todo el mundo'
+
+    @app.route('/api')
+    def hello_world():
+        return os.environ['API_TINDER']
 
     return app

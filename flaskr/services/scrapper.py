@@ -1,3 +1,4 @@
+import os
 import time
 import requests
 
@@ -7,8 +8,7 @@ from timeloop import Timeloop
 
 tl = Timeloop()
 
-api = '1f7a383e-cb45-4ff0-93e4-469f84ec337f'
-
+api = os.environ['API_TINDER']
 
 @tl.job(interval=timedelta(minutes=1))
 def sample_job_every_2s():
