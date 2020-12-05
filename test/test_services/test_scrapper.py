@@ -5,17 +5,15 @@ from unittest.mock import patch, PropertyMock, Mock
 
 from pymongo.cursor import Cursor
 
-from flaskr.models import TinderProfile, tinder_profile_from_dict
 from flaskr.services.scrapper import ScrapperService
 
 
 class TestScrapperService(TestCase):
 
-    @patch('pymongo.cursor.Cursor.sort')
     @patch.object(ScrapperService('foo'), '_last_document', return_value=None)
-    @patch('pymongo.collection.Collection.find', spec=Cursor)
-    def test_last_document_isNone(self, find, sut, sort):
-        find().sort().return_value = open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile.json').read()
+    @patch('pymongo.collection.Collection.find_one', spec=Cursor)
+    def test_last_document_isNone(self, find, sut):
+        find().return_value = open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile.json').read()
         sut.last_profile
         find.assert_called()
 
@@ -27,22 +25,22 @@ class TestScrapperService(TestCase):
 
     def test_should_upload(self):
         sut = ScrapperService('foo')
-        sut._last_document = open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile.json').read()
+        sut._last_document = json.loads(open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile.json').read())
         self.assertTrue(sut.should_upload(open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile_1photo.json').read()))
 
     def test_should_upload_disorder(self):
         sut = ScrapperService('foo')
-        sut._last_document = open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile.json').read()
+        sut._last_document = json.loads(open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile.json').read())
         self.assertTrue(sut.should_upload(open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile_2photo.json').read()))
 
     def test_should_upload_score_changed(self):
         sut = ScrapperService('foo')
-        sut._last_document = open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile.json').read()
+        sut._last_document = json.loads(open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile.json').read())
         self.assertTrue(sut.should_upload(open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile_3photo.json').read()))
 
     def test_should_not_upload(self):
         sut = ScrapperService('foo')
-        sut._last_document = open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile.json').read()
+        sut._last_document = json.loads(open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile.json').read())
         self.assertFalse(sut.should_upload(open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile.json').read()))
 
 

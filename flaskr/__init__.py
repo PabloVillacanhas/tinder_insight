@@ -28,7 +28,7 @@ def create_app(test_config=None):
 
     scrapper_service = scrapper.ScrapperService(mongo_connection)
     scheduler = BackgroundScheduler(daemon=True)
-    scheduler.add_job(scrapper_service.scrap_profile(), 'interval', seconds=5)
+    scheduler.add_job(scrapper_service.scrap_profile, 'interval', seconds=5)
     scheduler.start()
 
     try:
