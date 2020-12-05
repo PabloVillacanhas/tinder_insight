@@ -1,6 +1,10 @@
-import os
+from pprint import pprint
 
 from flask import Flask
+from apscheduler.schedulers.background import BackgroundScheduler
+import os
+
+from flaskr.services import scrapper
 
 
 def create_app(test_config=None):
@@ -18,7 +22,15 @@ def create_app(test_config=None):
         # load the test config if passed in
         app.config.from_mapping(test_config)
 
-    # ensure the instance folder exists
+    mongo_connection ='mongodb+srv://{username}:{mongopass}@tinder-insights.1thdi.mongodb.net/{dbname}?retryWrites=true&w' \
+                          '=majority'.format(username='tinderapp', mongopass=os.environ['MONGO_PASS_TINDER'],
+                                             dbname='tinderinsights')
+
+    scrapper_service = scrapper.ScrapperService(mongo_connection)
+    scheduler = BackgroundScheduler(daemon=True)
+    scheduler.add_job(scrapper_service.scrap_profile(), 'interval', seconds=5)
+    scheduler.start()
+
     try:
         os.makedirs(app.instance_path)
     except OSError:

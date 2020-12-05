@@ -13,16 +13,17 @@ flask-migrate = "*"
 flask-sqlalchemy = "*"
 flask-wtf = "*"
 psycopg2-binary = "*"
-timeloop = "*"
 requests = "*"
 pymongo = "*"
 dnspython = "*"
+APScheduler ="*"
 
 [dev-packages]
 coverage = "*"
 flask-debugtoolbar = "*"
 flask-testing = "*"
 "flake8" = "*"
+pprint = "*"
 
 
 [requires]
