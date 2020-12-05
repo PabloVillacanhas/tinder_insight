@@ -2,6 +2,7 @@ import os
 import json
 
 import pymongo as pymongo
+from bson.objectid import ObjectId
 import requests
 
 from flaskr.models import tinder_profile_from_dict, TinderProfile
@@ -18,7 +19,7 @@ class ScrapperService:
     def last_profile(self) -> TinderProfile:
         if self._last_document is None:
             db = self.client.tinderinsights
-            self._last_document = db.profile.find_one(sort=[("position", pymongo.DESCENDING)])
+            self._last_document = db.profile.find_one(sort=[("_id", pymongo.DESCENDING)])
         return tinder_profile_from_dict(self._last_document)
 
     def should_upload(self, response_content):
@@ -39,6 +40,8 @@ class ScrapperService:
         db = self.client.tinderinsights
         try:
             self._last_document = json.loads(response)
-            db.profile.insert(json.loads(response.content))
+            self._last_document["_id"] = str(ObjectId())
+            print('insert')
+            # db.profile.insert(self._last_document)
         except Exception as e:
             print(e)
