@@ -41,7 +41,6 @@ class ScrapperService:
         try:
             self._last_document = json.loads(response)
             self._last_document["_id"] = str(ObjectId())
-            print('insert')
-            # db.profile.insert(self._last_document)
+            db.profile.insert(self._last_document)
         except Exception as e:
             print(e)
