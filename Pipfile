@@ -23,8 +23,6 @@ coverage = "*"
 flask-debugtoolbar = "*"
 flask-testing = "*"
 "flake8" = "*"
-pprint = "*"
-
 
 [requires]
 python_version = "3.8"
