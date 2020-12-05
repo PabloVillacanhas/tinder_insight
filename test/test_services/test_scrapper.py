@@ -28,9 +28,14 @@ class TestScrapperService(TestCase):
     def test_should_upload(self):
         sut = ScrapperService('foo')
         sut._last_document = open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile.json').read()
-        self.assertTrue(sut.should_upload(open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile_2photo.json').read()))
+        self.assertTrue(sut.should_upload(open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile_1photo.json').read()))
 
     def test_should_upload_disorder(self):
+        sut = ScrapperService('foo')
+        sut._last_document = open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile.json').read()
+        self.assertTrue(sut.should_upload(open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile_2photo.json').read()))
+
+    def test_should_upload_score_changed(self):
         sut = ScrapperService('foo')
         sut._last_document = open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile.json').read()
         self.assertTrue(sut.should_upload(open(pathlib.Path(__file__).parent.parent / 'fixtures/tinder_profile_3photo.json').read()))
