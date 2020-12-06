@@ -1,9 +1,8 @@
-from pprint import pprint
-
 from flask import Flask
 from apscheduler.schedulers.background import BackgroundScheduler
 import os
 
+from flaskr.services.credentials import get_secrets
 from flaskr.services import scrapper
 
 
@@ -22,9 +21,15 @@ def create_app(test_config=None):
         # load the test config if passed in
         app.config.from_mapping(test_config)
 
-    mongo_connection ='mongodb+srv://{username}:{mongopass}@tinder-insights.1thdi.mongodb.net/{dbname}?retryWrites=true&w' \
-                          '=majority'.format(username='tinderapp', mongopass=os.environ['MONGO_PASS_TINDER'],
-                                             dbname='tinderinsights')
+    secrets = {'MONGO_PASS_TINDER': None, 'API_TINDER': None}
+    try:
+        secrets = get_secrets()
+    except Exception as e:
+        print(e)
+
+    mongo_connection = 'mongodb+srv://{username}:{mongopass}@tinder-insights.1thdi.mongodb.net/{dbname}?retryWrites=true&w' \
+                       '=majority'.format(username='tinderapp', mongopass=secrets['MONGO_PASS_TINDER'],
+                                          dbname='tinderinsights')
 
     scrapper_service = scrapper.ScrapperService(mongo_connection)
     scheduler = BackgroundScheduler(daemon=True)
