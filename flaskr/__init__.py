@@ -18,8 +18,9 @@ def create_app():
         app.config.from_pyfile('config.py')
     elif app.config['ENV'] == 'development':
         app.config.from_pyfile('devconfig.py')
-        logging.config.dictConfig(app.config['LOGGING_CONFIG'])
-        logger = logging.getLogger(app.config['FLASK_APP'])
+
+    logging.config.dictConfig(app.config['LOGGING_CONFIG'])
+    logger = logging.getLogger(app.config['FLASK_APP'])
 
     secrets = None
     try:
