@@ -1,19 +1,21 @@
-import os
 import json
-
+import requests
+import logging
 import pymongo as pymongo
 from bson.objectid import ObjectId
-import requests
 
 from flaskr.models import tinder_profile_from_dict, TinderProfile
 
+logger = logging.getLogger(__name__)
+
 
 class ScrapperService:
-    api = os.getenv('API_TINDER')
 
-    def __init__(self, mongo_conn):
+    def __init__(self, mongo_conn, tinder_api):
         self.client = pymongo.MongoClient(mongo_conn)
         self._last_document = None
+        self.api = tinder_api
+        self.status = 'WORKING'
 
     @property
     def last_profile(self) -> TinderProfile:
@@ -27,20 +29,25 @@ class ScrapperService:
         return not new_profile.__eq__(self.last_profile)
 
     def scrap_profile(self):
-        print("Scheduler is alive!")
+        logger.info('Scrapping')
         response = requests.get("https://api.gotinder.com/profile",
-                                headers={'x-auth-token': ScrapperService.api})
+                                headers={'x-auth-token': self.api})
         if response.status_code == 200:
             if self.should_upload(response.content):
                 self.upload_to_mongo(response.content)
             else:
-                print('No variations')
+                logger.info('No variations')
+        elif response.status == 401:
+            logger.warning('The token has expired')
+            self.status = 'IDLE'
+
 
     def upload_to_mongo(self, response):
         db = self.client.tinderinsights
         try:
+            logger.info('Uploading to mongo')
             self._last_document = json.loads(response)
             self._last_document["_id"] = str(ObjectId())
             db.profile.insert(self._last_document)
         except Exception as e:
-            print(e)
+            logging.error(e)
