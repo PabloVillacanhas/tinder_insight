@@ -1,19 +1,18 @@
-import logging
 import os
 
 from google.cloud import secretmanager
 
-client = secretmanager.SecretManagerServiceClient()
-
 secrets = None
 
-
+# Cloud must provide an envar id to know how to load the secrets.
+# Nowadays we deploy this app in two serverless cloud platforms.
 def load():
     cloud_env = os.environ.get('CLOUD_ENV', 'GOOGLE')
     global secrets
 
     if secrets is None:
         if cloud_env == 'GOOGLE':
+            client = secretmanager.SecretManagerServiceClient()
             project_id = '670663813881'
             secret_ids = ['API_TINDER', 'MONGO_PASS_TINDER']
             version_id = '1'
