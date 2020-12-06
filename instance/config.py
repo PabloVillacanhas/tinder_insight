@@ -19,7 +19,7 @@ LOGGING_CONFIG = {
     'loggers': {
         '': {  # root logger
             'handlers': ['default'],
-            'level': 'INFO',
+            'level': 'WARNING',
             'propagate': False
         },
         'apscheduler': {
