@@ -22,11 +22,6 @@ LOGGING_CONFIG = {
             'level': 'INFO',
             'propagate': False
         },
-        'tinder_insights': {
-            'level': 'INFO',
-            'handlers': ['default'],
-            'propagate': True
-        },
         'apscheduler': {
             'level': 'WARNING',
             'propagate': True
