@@ -1,7 +1,9 @@
-from flask import Flask
+from datetime import datetime
+from flask import Flask, render_template
 from apscheduler.schedulers.background import BackgroundScheduler
 import os
 import logging.config
+import jinja2
 
 from flaskr.services.credentials import load
 from flaskr.services import scrapper
@@ -45,12 +47,15 @@ def create_app():
     except OSError:
         pass
 
+    #Jinja filters
+    def uptime(from_date):
+        td = datetime.utcnow() - from_date
+        return '{0} days, {1} hours, {2} minutes and {3} seconds.'.format(td.days, td.seconds // 3600,
+                                                                          td.seconds % 3600 // 60, td.seconds % 60)
+    app.jinja_env.filters['uptime'] = uptime
+
     @app.route('/')
     def hello_world():
-        return 'Hola a todo el mundo'
-
-    @app.route('/status')
-    def status():
-        return scrapper_service.status
+        return render_template('index.html.jinja2', scrapper=scrapper_service)
 
     return app

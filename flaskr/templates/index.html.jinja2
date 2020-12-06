@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Scrapper index</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico">
+    </head>
+    <body>
+        <h1>Scrapper status</h1>
+        <div>{{ scrapper.status }}</div>
+        <div>Uptime: {{scrapper.start | uptime }}</div>
+        <div>Last execution: {{ scrapper.last_execution.strftime("%b %d %Y %H:%M:%S") }}</div>
+    </body>
+</html>

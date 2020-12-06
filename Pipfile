@@ -18,7 +18,7 @@ pymongo = "*"
 dnspython = "*"
 APScheduler ="*"
 google-cloud-secret-manager = "*"
-google-cloud-storage = "*"
+jinja2 = "*"
 
 [dev-packages]
 coverage = "*"

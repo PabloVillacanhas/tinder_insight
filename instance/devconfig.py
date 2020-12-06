@@ -1,4 +1,5 @@
 FLASK_APP = 'tinder_insights'
+EXPLAIN_TEMPLATE_LOADING = True
 LOGGING_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,

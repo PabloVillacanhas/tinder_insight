@@ -2,6 +2,7 @@ import json
 import requests
 import logging
 import pymongo as pymongo
+from datetime import datetime
 from bson.objectid import ObjectId
 
 from flaskr.models import tinder_profile_from_dict, TinderProfile
@@ -16,6 +17,8 @@ class ScrapperService:
         self._last_document = None
         self.api = tinder_api
         self.status = 'WORKING'
+        self.start = datetime.utcnow()
+        self.last_execution = datetime.utcnow()
 
     @property
     def last_profile(self) -> TinderProfile:
@@ -33,6 +36,7 @@ class ScrapperService:
         response = requests.get("https://api.gotinder.com/profile",
                                 headers={'x-auth-token': self.api})
         if response.status_code == 200:
+            self.last_execution = datetime.utcnow()
             if self.should_upload(response.content):
                 self.upload_to_mongo(response.content)
             else:
@@ -40,7 +44,6 @@ class ScrapperService:
         elif response.status == 401:
             logger.warning('The token has expired')
             self.status = 'IDLE'
-
 
     def upload_to_mongo(self, response):
         db = self.client.tinderinsights
