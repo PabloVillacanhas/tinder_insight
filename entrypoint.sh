@@ -1,3 +1,3 @@
 #!/bin/sh
 
-gunicorn -w 1 app
+gunicorn -w 1 run:gunicorn_app

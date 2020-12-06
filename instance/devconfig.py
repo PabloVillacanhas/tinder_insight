@@ -20,16 +20,16 @@ LOGGING_CONFIG = {
         '': {  # root logger
             'handlers': ['default'],
             'level': 'INFO',
-            'propagate': True
+            'propagate': False
         },
-        'tinder_insights': {
-            'level': 'INFO',
-            'handlers': ['default'],
-            'propagate': True
-        },
+        # 'tinder_insights': {
+        #     'level': 'INFO',
+        #     'handlers': ['default'],
+        #     'propagate': False
+        # },
         'apscheduler': {
             'level': 'WARNING',
-            'propagate': True
+            'propagate': False
         },
     }
 }

@@ -1,4 +1,5 @@
 FLASK_APP = 'tinder_insights'
+WEB_CONCURRENCY = 1
 LOGGING_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -18,8 +19,8 @@ LOGGING_CONFIG = {
     'loggers': {
         '': {  # root logger
             'handlers': ['default'],
-            'level': 'WARNING',
-            'propagate': True
+            'level': 'INFO',
+            'propagate': False
         },
         'tinder_insights': {
             'level': 'INFO',

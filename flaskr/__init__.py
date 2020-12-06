@@ -3,26 +3,23 @@ from flask import Flask, render_template
 from apscheduler.schedulers.background import BackgroundScheduler
 import os
 import logging.config
-import jinja2
 
 from flaskr.services.credentials import load
 from flaskr.services import scrapper
 
 logger = None
 
-
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
 
     global logger
-
     if app.config['ENV'] == 'production':
         app.config.from_pyfile('config.py')
     elif app.config['ENV'] == 'development':
         app.config.from_pyfile('devconfig.py')
 
     logging.config.dictConfig(app.config['LOGGING_CONFIG'])
-    logger = logging.getLogger(app.config['FLASK_APP'])
+    logger = logging.getLogger(__name__)
 
     secrets = None
     try:
